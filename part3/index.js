@@ -1,10 +1,13 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 const app = express();
 
 app.use(express.json());
 morgan.token('body', (request) => JSON.stringify(request.body));
 app.use(morgan('tiny'));
+app.use(cors());
+app.use(express.static('build'));
 
 let entries = [
   {
@@ -85,7 +88,7 @@ app.post('/api/persons', postmorgan, (req, res) => {
   res.json(entrie);
 });
 
-const PORT = 3002;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log('wokring');
 });
