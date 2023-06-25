@@ -51,21 +51,21 @@ app.delete('/api/persons/:id', (req, res) => {
 const postmorgan = morgan(':method :url :status :res[content-length] - :response-time ms :body');
 
 app.post('/api/persons', postmorgan, (req, res) => {
-  const entrieNames = entries.map((e) => e.name);
-  const nameExists = entrieNames.includes(req.body.name);
+  let people;
+  Person.find({}).then((persons) => (people = persons));
 
-  if (!req.body || nameExists || !req.body.name || !req.body.number) {
-    return res.status(400).json({ error: 'something is missing' });
-  }
+  // const personExists = people.includes(req.body.name);
 
-  const entrie = {
-    id: generateId(),
+  // if (!req.body || personExists || !req.body.name || !req.body.number) {
+  //   return res.status(400).json({ error: 'something is missing' });
+  // }
+
+  const newPerson = new Person({
     name: req.body.name,
     number: req.body.number,
-  };
+  });
 
-  entries = entries.concat(entrie);
-  res.json(entrie);
+  newPerson.save().then((person) => res.json(person));
 });
 
 const PORT = process.env.PORT || 3001;
